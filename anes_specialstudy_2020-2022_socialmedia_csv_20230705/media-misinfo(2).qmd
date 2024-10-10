@@ -1,0 +1,143 @@
+---
+title: "media-misinfo(2)"
+author: "Isabelle Gibson"
+format: html
+editor: visual
+---
+
+```{r Load necessary libraries}
+
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(broom)
+
+# Load the CSV file
+df <- read_csv("anes_specialstudy_2020-2022_socialmedia_csv_20230705.csv")
+```
+
+```{r Recode variables}
+# Step 1: Recode the dependent variable (trust in vote accuracy) to binary
+df <- df %>%
+  mutate(trust_vote_binary = ifelse(w2trustvote >= 4, 1, 0))  # 1 = High trust, 0 = Low trust
+
+# Step 2: Recode independent variables (exposure to misinformation, trust in Facebook info)
+df <- df %>%
+  mutate(exposure_misinformation = w2fb1,  # Exposure to misinformation
+         trust_political_fb = w2trustfb)   # Trust in political information from Facebook
+
+# Step 3: Recode control variables (age group, education, party ID, gender)
+df <- df %>%
+  mutate(age_group = cut(profile_age, breaks = c(18, 29, 45, 64, 100), 
+                         labels = c("18-29", "30-45", "46-64", "65+"), right = FALSE),
+         education = as.factor(profile_educ5),  
+         party_id = case_when(w2pid1d == 1 ~ "Democrat",  
+                              w2pid1r == 1 ~ "Republican",  
+                              TRUE ~ "Independent"),  
+         gender = as.factor(profile_gender))  # Gender: 1 = Male, 2 = Female
+
+# Convert education and party_id to factors if necessary
+df <- df %>%
+  mutate(education = as.factor(education), 
+         party_id = as.factor(party_id))  
+```
+
+```{r Descriptive statistics for Key variables}
+
+# Descriptive statistics
+summary(df$trust_vote_binary)          # Dependent variable
+summary(df$exposure_misinformation)    # Exposure to misinformation
+summary(df$trust_political_fb)         # Trust in political information from Facebook
+summary(df$age_group)                  # Age group
+summary(df$education)                  # Education level
+summary(df$party_id)                   # Political party ID
+summary(df$gender)                     # Gender
+```
+
+```{r Fit Binary Logit model}
+
+# Step 4: Fitting the binary logistic regression model
+logit_model <- glm(trust_vote_binary ~ exposure_misinformation + trust_political_fb + age_group + education + party_id + gender,
+                   data = df, family = binomial)
+
+# Step 5: Displaying the summary of the model
+summary(logit_model)
+
+# Step 6: Calculating and displaying the odds ratios
+exp(coef(logit_model))  # Odds Ratios
+
+# Step 7: Confidence intervals for the odds ratios
+exp(confint(logit_model))
+```
+
+```{r Visualize Key variables}
+
+# Visualization - Bar Graph for Dependent Variable (Trust in Vote Accuracy)
+ggplot(df, aes(x = as.factor(trust_vote_binary), fill = as.factor(trust_vote_binary))) +
+  geom_bar() +
+  labs(title = "Distribution of Trust in Vote Accuracy",
+       x = "Trust in Vote Accuracy (0 = Low, 1 = High)",
+       y = "Count") +
+  scale_fill_discrete(name = "Trust in Vote Accuracy") +
+  theme_minimal()
+
+# Visualization - Bar Graph for Exposure to Misinformation
+ggplot(df, aes(x = as.factor(exposure_misinformation), fill = as.factor(exposure_misinformation))) +
+  geom_bar() +
+  labs(title = "Perceived Seriousness of Misinformation on Facebook",
+       x = "Seriousness of Misinformation (1 = Not at all, 5 = Extremely Serious)",
+       y = "Count") +
+  scale_fill_discrete(name = "Misinformation Seriousness") +
+  theme_minimal()
+
+# Visualization - Bar Graph for Trust in Political Information from Facebook
+ggplot(df, aes(x = as.factor(trust_political_fb), fill = as.factor(trust_political_fb))) +
+  geom_bar() +
+  labs(title = "Trust in Political Information from Facebook",
+       x = "Trust in Political Information (1 = Not at all, 5 = A great deal)",
+       y = "Count") +
+  scale_fill_discrete(name = "Trust in Facebook") +
+  theme_minimal()
+
+# Visualization - Age Group Distribution
+ggplot(df, aes(x = age_group, fill = age_group)) +
+  geom_bar() +
+  labs(title = "Age Group Distribution",
+       x = "Age Group",
+       y = "Count") +
+  scale_fill_discrete(name = "Age Group") +
+  theme_minimal()
+
+# Visualization - Political Party Identification Distribution
+ggplot(df, aes(x = party_id, fill = party_id)) +
+  geom_bar() +
+  labs(title = "Political Party Identification Distribution",
+       x = "Party ID",
+       y = "Count") +
+  scale_fill_discrete(name = "Party Identification") +
+  theme_minimal()
+
+# Visualization - Gender Distribution
+ggplot(df, aes(x = gender, fill = gender)) +
+  geom_bar() +
+  labs(title = "Gender Distribution",
+       x = "Gender",
+       y = "Count") +
+  scale_fill_discrete(name = "Gender") +
+  theme_minimal()
+```
+
+```{r Visualize Model of Coefficients}
+
+# Step 8: Tidy up the logistic regression results for plotting
+tidy_logit <- tidy(logit_model)  # Convert model results to a tidy format
+
+# Step 9: Coefficient plot with confidence intervals
+ggplot(tidy_logit, aes(x = estimate, y = term)) +
+  geom_point() +
+  geom_errorbarh(aes(xmin = estimate - 1.96 * std.error, xmax = estimate + 1.96 * std.error), height = 0.2) +
+  labs(title = "Effect of Variables on Trust in Vote Accuracy",
+       x = "Coefficient Estimate",
+       y = "Variables") +
+  theme_minimal()
+```
