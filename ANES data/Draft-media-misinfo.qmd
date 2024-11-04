@@ -1,0 +1,194 @@
+---
+title: "media-misinfo"
+author: "Isabelle Gibson"
+format: html
+editor: visual
+execute: 
+  message: false
+  warning: false
+  echo: false
+---
+
+```{r Load necessary libraries}
+
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(broom)
+library(janitor)
+library(modelsummary)
+library(kableExtra)
+
+# Load the CSV file
+df <- read_csv("anes_socialmedia_study.csv")
+```
+
+```{r Recode variables}
+# Recode the dependent variable (trust in vote accuracy) to binary
+df <- df %>%
+  mutate(trust_vote = ifelse(w2trustvote >= 4, 1, 0))  # 1 = High trust, 0 = Low trust
+
+# Filter out rows where w2fb1 is -7, -6, or -5, keeping perception_misinfo as the variable name
+df <- df %>%
+  filter(w2fb1 >= 1 & w2fb1 <= 5) %>%
+  mutate(perception_misinfo = w2fb1)
+
+# Filter out rows where w2fb4 is -7, -6, -5, -1, keep name pol_fbnews
+df <- df %>%
+  filter(w2fb4 >= 1 & w2fb4 <= 5) %>%
+  mutate(pol_newsfb = w2fb4)
+```
+
+```{r Descriptive statistics for Key variables}
+
+# Descriptive statistics for key variables
+descriptive_stats <- df %>%
+  summarise(
+    N_trust_vote = n(),
+    mean_trust_vote = mean(trust_vote, na.rm = TRUE),
+    sd_trust_vote = sd(trust_vote, na.rm = TRUE),
+    min_trust_vote = min(trust_vote, na.rm = TRUE),
+    max_trust_vote = max(trust_vote, na.rm = TRUE),
+    
+    N_perception_misinfo = n(),
+    mean_perception_misinfo = mean(perception_misinfo, na.rm = TRUE),
+    sd_perception_misinfo = sd(perception_misinfo, na.rm = TRUE),
+    min_perception_misinfo = min(perception_misinfo, na.rm = TRUE),
+    max_perception_misinfo = max(perception_misinfo, na.rm = TRUE),
+    
+    N_pol_newsfb = n(),
+    mean_pol_newsfb = mean(pol_newsfb, na.rm = TRUE),
+    sd_pol_newsfb = sd(pol_newsfb, na.rm = TRUE),
+    min_pol_newsfb = min(pol_newsfb, na.rm = TRUE),
+    max_pol_newsfb = max(pol_newsfb, na.rm = TRUE)
+  )
+
+# Display the descriptive statistics with 15 column names
+descriptive_stats %>%
+  knitr::kable(col.names = c("Sample Size (Trust Vote)", "Mean (Trust Vote)", "SD (Trust Vote)", "Min (Trust Vote)", "Max (Trust Vote)",
+                             "Sample Size (Perception of Misinformation)", "Mean (Perception of Misinformation)", "SD (Perception of Misinformation)", 
+                             "Min (Perception of Misinformation)", "Max (Perception of Misinformation)", 
+                             "Sample Size (Political News on FB)", "Mean (Political News on FB)", "SD (Political News on FB)", 
+                             "Min (Political News on FB)", "Max (Political News on FB)"),
+               caption = "Descriptive Statistics for Trust in Vote Accuracy, Perception of Misinformation, and Political News Exposure on Facebook") %>%
+  kableExtra::kable_styling(full_width = F, bootstrap_options = c("striped", "hover"))
+```
+
+```{r Cross Tabs}
+# Crosstab for Trust in Vote Accuracy by Perception of Misinformation
+datasummary_crosstab(trust_vote ~ perception_misinfo, data = df, output = "dataframe")
+
+#cross-tab for trust in vote accuracy and exposure to political news on FB
+datasummary_crosstab(trust_vote ~ pol_newsfb, data = df, output = "dataframe")
+
+```
+
+```{r}
+# Crosstab with renamed variables for better presentation: Trust_vote v. Perception_misinfo
+datasummary_crosstab(
+  `Trust in Vote Count Accuracy of the 2020 Election` ~ `Perception of Misinformation on Facebook`, 
+  data = df %>%
+    mutate(
+      `Trust in Vote Count Accuracy of the 2020 Election` = ifelse(trust_vote == 1, "High Trust", "Low Trust"),
+      `Perception of Misinformation on Facebook` = factor(perception_misinfo,
+        levels = 1:5,
+        labels = c("Not at all serious", "Slightly serious", "Moderately serious", "Very serious", "Extremely serious"))
+    ),
+  title = "Cross-Tab of Trust in Vote Count Accuracy (2020 Election) on Perception of Misinformation on Facebook",
+  position = "H"
+)
+
+#cross tab for Trust in vote count by Exposure to Political News on FB 
+datasummary_crosstab(
+  `Trust in Vote Count Accuracy of the 2020 Election` ~ `Exposure to Political News on Facebook`, 
+  data = df %>%
+    mutate(
+      `Trust in Vote Count Accuracy of the 2020 Election` = ifelse(trust_vote == 1, "High Trust", "Low Trust"),
+      `Exposure to Political News on Facebook` = factor(pol_newsfb,
+        levels = 1:5,
+        labels = c("Never", "Some of the time", "About half the time", "Most of time", "Always"))
+    ),
+  title = "Cross-Tab for Trust in vote count by Exposure to Political News on Facebook",
+  position = "H"
+)
+```
+
+**Table 1: Trust in Vote Accuracy by Perception of Misinformation on Facebook**
+
+This crosstab shows how trust in vote accuracy (low or high) varies with perception of misinformation on Facebook, ranging from "Not at all serious" (1) to "Extremely serious" (5).
+
+Low Trust (0):
+
+The majority of respondents with low trust in vote accuracy believe misinformation on Facebook is serious, with 31.1% perceiving it as "Very serious" (4) and 27.8% perceiving it as "Extremely serious" (5). This indicates that people with low trust in vote accuracy are more likely to view misinformation on Facebook as a significant problem.
+
+Only 2.7% of respondents with low trust rated misinformation as "Not at all serious" (1).
+
+High Trust (1):
+
+Respondents with high trust in vote accuracy show a similar pattern but lean more heavily toward higher levels of concern about misinformation, with 35.3% perceiving it as "Very serious" (4) and 41.3% perceiving it as "Extremely serious" (5).
+
+A very small percentage (1.1%) of respondents with high trust believe misinformation is "Not at all serious" (1).
+
+Overall:
+
+Across all respondents, 33.1% perceive misinformation as "Very serious" (4) and 34.3% as "Extremely serious" (5), indicating that a large proportion of the total sample believes misinformation is a serious problem. Trust in vote accuracy (both low and high) is concentrated at these higher levels of perceived misinformation.
+
+Table 2: Trust in Vote Accuracy by Exposure to Political News on Facebook
+
+This cross-tab shows how trust in vote accuracy (low or high) varies with exposure to news on Facebook, ranging from "Never" to "Always."
+
+Low Trust (0):
+
+Among respondents with low trust, the largest group (33%) reports exposure to news on Facebook "Some of the time," followed by "About half of the time" (22.4%) and "Most of the time" (22.4%).
+
+A smaller percentage (11.6%) reports never seeing political news on Facebook.
+
+High Trust (1):
+
+Similarly, respondents with high trust in vote accuracy also tend to fall in the "Some of the time" category (32.8%). However, a slightly larger proportion (24%) reports seeing news "Most of the time" compared to those with low trust.
+
+The percentage of high-trust respondents who never see news on Facebook is similar to that of low-trust respondents (12.2%).
+
+Overall:
+
+Across all respondents, 32.9% report seeing news on Facebook "Some of the time," with smaller percentages at "About half of the time" (21.1%) and "Most of the time" (23.2%).
+
+The distribution of exposure to news is relatively even across trust levels, with no extreme differences between those who report low or high trust.
+
+Summary of Findings:
+
+Perception of Misinformation: Both low and high trust respondents tend to view misinformation as a serious issue, but those with high trust lean more heavily toward the highest levels of perceived seriousness.
+
+Exposure to News on Facebook: There is no drastic difference in exposure between low-trust and high-trust respondents, although high-trust respondents are slightly more likely to report seeing news "Most of the time" compared to low-trust respondents.
+
+These crosstabs show that perception of misinformation has a clearer relationship with trust in vote accuracy than exposure to news, as both high and low trust respondents similarly report moderate levels of news exposure.
+
+```{r}
+#Bar graph for Trust in Vote Accuracy by Exposure to Political News on Facebook
+
+ggplot(df, aes(x = as.factor(pol_newsfb), fill = as.factor(trust_vote))) +
+  geom_bar(position = "fill") +
+  labs(title = "Trust in Vote Accuracy by Exposure to Political News on Facebook",
+       x = "Exposure to Political News on Facebook",
+       y = "Proportion of Trust in Vote Accuracy",
+       fill = "Trust in Vote Accuracy") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_x_discrete(labels = c("1" = "Never", "2" = "Rarely", "3" = "Sometimes", 
+                              "4" = "Often", "5" = "Always")) +
+  theme_minimal(base_size = 12)
+
+
+# Bar graph for Trust in Vote Accuracy by Perception of Misinformation
+ggplot(df, aes(x = as.factor(perception_misinfo), fill = as.factor(trust_vote))) +
+  geom_bar(position = "fill") +
+  labs(title = "Trust in Vote Accuracy by Perception of Misinformation on Facebook",
+       x = "Perception of Misinformation on Facebook",
+       y = "Proportion of Trust in Vote Accuracy",
+       fill = "Trust in Vote Accuracy") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_x_discrete(labels = c("1" = "Not at all serious", "2" = "Slightly serious", 
+                              "3" = "Moderately serious", "4" = "Very serious", 
+                              "5" = "Extremely serious")) +
+  theme_minimal(base_size = 12)
+
+```
