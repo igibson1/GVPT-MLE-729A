@@ -1,0 +1,168 @@
+---
+title: "Phase 3: Final Model"
+author: "Isabelle Gibson"
+format: 
+  pdf:
+    fig-pos: "H"
+    linestretch: 2
+    fontsize: "12pt"
+    margin-bottom: "1in"
+    margin-top: "1in"
+    margin-left: "1in"
+    margin-right: "1in"
+editor: visual
+execute: 
+  message: false
+  warning: false
+  echo: false
+---
+
+```{r Load Libraries}
+
+library(ggeffects)
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(broom)
+library(janitor)
+library(modelsummary)
+library(kableExtra)
+library(knitr)
+library(car)         
+library(tibble)    
+library(arm)
+library(haven)
+library(foreign)
+
+# Load the CSV file
+df <- read_csv("anes_socialmedia_study.csv")
+```
+
+```{r Recode variables}
+
+# Recode the dependent variable (trust in vote accuracy) to binary
+df <- df %>%
+  mutate(trust_vote = ifelse(w2trustvote >= 4, 1, 0))  # 1 = High trust, 0 = Low trust
+
+# Filter out rows where w2fb1 is -7, -6, or -5, keeping perception_misinfo as the variable name
+df <- df %>%
+  filter(w2fb1 >= 1 & w2fb1 <= 5) %>%
+  mutate(perception_misinfo = w2fb1)
+
+# Filter out rows where w2fb4 is -7, -6, -5, -1, keep name pol_fbnews
+df <- df %>%
+  filter(w2fb4 >= 1 & w2fb4 <= 5) %>%
+  mutate(pol_newsfb = w2fb4)
+
+# Add control variables
+df <- df %>%
+  mutate(
+    age_group = case_when(
+      profile_age >= 18 & profile_age <= 29 ~ "18-29",
+      profile_age >= 30 & profile_age <= 45 ~ "30-45",
+      profile_age >= 46 & profile_age <= 64 ~ "46-64",
+      profile_age >= 65 ~ "65+",
+      TRUE ~ NA_character_  # Handle missing or invalid ages
+    )
+  )
+
+df <- df %>%
+  mutate(
+    education_group = case_when(
+      profile_educ5 == 1 ~ "Less than High School",
+      profile_educ5 == 2 ~ "High School Graduate",
+      profile_educ5 == 3 ~ "Some College",
+      profile_educ5 == 4 ~ "College Graduate",
+      profile_educ5 == 5 ~ "Postgraduate Degree",
+      TRUE ~ NA_character_  # Handle missing or invalid data
+    )
+  )
+
+df <- df %>%
+  mutate(
+    party_id = case_when(
+      w2pid7x %in% c(1, 2, 3) ~ "Democrat",  # Strong, Weak, and Lean Democrat
+      w2pid7x == 4 ~ "Independent",         # Pure Independent
+      w2pid7x %in% c(5, 6, 7) ~ "Republican", # Strong, Weak, and Lean Republican
+      TRUE ~ "Other/Unknown"                # Handle invalid or other cases
+    )
+  )
+
+```
+
+```{r}
+#Final model
+
+final_model <- glm(
+  trust_vote ~ perception_misinfo + pol_newsfb + age_group + education_group + party_id,
+  family = binomial,
+  data = df
+)
+
+# Final Model with Professionally Formatted Output
+
+# Run the final logistic regression model
+final_model <- glm(trust_vote ~ perception_misinfo + age_group + education_group + party_id, 
+                   family = binomial, data = df)
+
+# Define coefficient map for readability
+coef_map <- c(
+  "(Intercept)" = "Intercept",
+  "perception_misinfo" = "Perception of Misinformation on Facebook",
+  "pol_newsfb" = "Exposure to Political News on Facebook",
+  "age_group30-45" = "Age: 30-45",
+  "age_group46-64" = "Age: 46-64",
+  "age_group65+" = "Age: 65+",
+  "education_groupHigh School Graduate" = "Education: High School Graduate",
+  "education_groupSome College" = "Education: Some College",
+  "education_groupCollege Graduate" = "Education: College Graduate",
+  "education_groupPostgraduate Degree" = "Education: Postgraduate Degree",
+  "party_idIndependent" = "Party ID: Independent",
+  "party_idRepublican" = "Party ID: Republican",
+  "party_idOther/Unknown" = "Party ID: Other/Unknown"
+)
+
+# Generate a professionally formatted summary table
+modelsummary(
+  final_model,
+  coef_map = coef_map,
+  statistic = c("std.error", "p.value"),
+  stars = TRUE,
+  title = "Final Logit Regression Results Trust in Vote Accuracy by Perception of Misinfo on FB ",
+  output = "kableExtra"
+) %>%
+  kable_styling(
+    full_width = FALSE, 
+    bootstrap_options = c("striped", "hover", "condensed"),
+    latex_options = c("scale_down")
+  )
+```
+
+```{r}
+
+# Predicted Probabilities for Perception of Misinformation with Confidence Intervals
+pred_misinfo <- data.frame(perception_misinfo = 1:5, 
+                           age_group = "30-45", 
+                           education_group = "College Graduate", 
+                           party_id = "Independent")
+
+# Get predictions with standard errors
+predicted <- predict(final_model, newdata = pred_misinfo, type = "response", se.fit = TRUE)
+
+# Add predictions and CIs to the data frame
+pred_misinfo$predicted_prob <- predicted$fit
+pred_misinfo$lower_ci <- predicted$fit - 1.96 * predicted$se.fit
+pred_misinfo$upper_ci <- predicted$fit + 1.96 * predicted$se.fit
+
+# Visualization for Perception of Misinformation with CIs
+
+ggplot(pred_misinfo, aes(x = perception_misinfo, y = predicted_prob)) +
+  geom_point(size = 3, color = "blue") +
+  geom_line(color = "blue", size = 1) +
+  geom_ribbon(aes(ymin = lower_ci, ymax = upper_ci), alpha = 0.2, fill = "blue") +
+  labs(title = "Predicted Trust in Vote Count by Perception of Misinformation",
+       x = "Perception of Misinformation (1 = Not at all serious, 5 = Extremely serious)",
+       y = "Predicted Probability of High Trust") +
+  theme_minimal(base_size = 12)
+
+```
