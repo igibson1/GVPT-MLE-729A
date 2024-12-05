@@ -1,0 +1,368 @@
+---
+title: "Phase 3: Final Model"
+author: "Isabelle Gibson"
+format: 
+  pdf:
+    fig-pos: "H"
+    linestretch: 2
+    fontsize: "12pt"
+    margin-bottom: "1in"
+    margin-top: "1in"
+    margin-left: "1in"
+    margin-right: "1in"
+editor: visual
+execute: 
+  message: false
+  warning: false
+  echo: false
+---
+
+Run the libraries and load the data
+
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(ggplot2)
+library(broom)
+library(kableExtra)
+library(readr)
+library(modelsummary)
+library(knitr)
+library(margins)
+library(arm)
+library(mvtnorm)
+library(foreign)
+
+d <- read_csv("anes_socialmedia_study.csv")
+```
+
+```{r Recode varables}
+
+# Recode the dependent variable (trust in vote accuracy) to binary
+d <- d %>%
+  mutate(trust_vote = ifelse(w2trustvote >= 4, 1, 0))  # 1 = High trust, 0 = Low trust
+
+# Filter out rows where w2fb1 is -7, -6, or -5, keeping perception_misinfo as the variable name
+d <- d %>%
+  filter(w2fb1 >= 1 & w2fb1 <= 5) %>%
+  mutate(perception_misinfo = w2fb1)
+
+# Filter out rows where w2fb4 is -7, -6, -5, -1, keep name pol_fbnews
+d <- d %>%
+  filter(w2fb4 >= 1 & w2fb4 <= 5) %>%
+  mutate(pol_newsfb = w2fb4)
+
+# Recode age into groups
+d <- d %>%
+  mutate(
+    age = case_when(
+      profile_age >= 18 & profile_age <= 29 ~ 1,  # Age group 18-29
+      profile_age >= 30 & profile_age <= 45 ~ 2,  # Age group 30-45
+      profile_age >= 46 & profile_age <= 64 ~ 3,  # Age group 46-64
+      profile_age >= 65 ~ 4,                     # Age group 65+
+      TRUE ~ NA_real_                            # Handle missing or invalid ages
+    )  
+  )
+
+# Recode political affiliation
+d <- d %>%
+  mutate(
+    party_id = case_when(
+      w2pid7x %in% c(1, 2, 3) ~ 1,  # Democrat
+      w2pid7x %in% c(5, 6, 7) ~ 3,  # Republican
+      w2pid7x == 4 ~ 2,             # Independent
+      TRUE ~ 4                      # Other
+    )
+  )
+
+# Recode gender (0 = Male, 1 = Female)
+d <- d %>%
+  mutate(
+    gender = case_when(
+      profile_gender == 1 ~ 0,  # Male
+      profile_gender == 2 ~ 1,  # Female
+      TRUE ~ NA_real_
+    )
+  )
+
+#drop NAs
+d <- d %>%
+  filter(!is.na(profile_educ5))
+d <- d %>%
+  filter(!is.na(perception_misinfo))
+d <- d %>%
+  filter(!is.na(gender))
+d <- d %>%
+  filter(!is.na(party_id))
+d <- d %>%
+  filter(!is.na(age)) 
+```
+
+### Step 1: Run Final Models for H1 and H2
+
+```{r}
+final_model_H1 <- glm(
+  trust_vote ~ perception_misinfo + age + profile_educ5 + party_id + gender,
+  family = binomial(link = "logit"),
+  data = d
+)
+
+summary(final_model_H1)
+coefs <- coef(final_model_H1)
+
+final_model_H2 <- glm(
+  trust_vote ~ pol_newsfb + age + profile_educ5 + party_id + gender,
+  family = binomial(link = "logit"),
+  data = d
+)
+
+
+#format the table
+coef_map <- c(
+  "(Intercept)" = "Intercept",
+  "perception_misinfo" = "Perception of Misinformation on Facebook",
+  "pol_newsfb" = "Exposure to Political News on Facebook",
+  "age" = "Age",
+  "profile_educ5" = "Education Level",
+  "party_id" = "Party ID",
+  "gender" = "Gender (1 = Female)"
+)
+
+modelsummary(
+  final_model_H1,
+  coef_map = coef_map,
+  statistic = c("std.error", "p.value"),
+  stars = TRUE,
+  title = "Logit Regression Results Trust in Vote Accuracy by Perception of Misinfo on FB ",
+  output = "kableExtra"
+) %>%
+  kable_styling(
+    full_width = FALSE, 
+    bootstrap_options = c("striped", "hover", "condensed"),
+    latex_options = c("scale_down")
+  ) 
+
+modelsummary(
+  final_model_H2,
+  coef_map = coef_map,
+  statistic = c("std.error", "p.value"),
+  stars = TRUE,
+  title = "Logit Regression Results Trust in Vote Accuracy by Exposure to Political News on FB ",
+  output = "kableExtra"
+) %>%
+  kable_styling(
+    full_width = FALSE, 
+    bootstrap_options = c("striped", "hover", "condensed"),
+    latex_options = c("scale_down")
+  )
+```
+
+### Step 2: Predicted Probabilities and CI intervals for H1 and H2
+
+Probability of trusting the 2020 Presidential vote count Logit Model Equation
+
+$$
+P(\text{Trust Vote Count}) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 \cdot \text{Age} + \beta_2 \cdot \text{Gender} + \beta_3 \cdot \text{Party ID} + \beta_4 \cdot \text{Education Level})}}
+$$
+
+```{r}
+
+# Define the coefficients for H1 (Perception of Misinformation) FULL NUMBER not rounded. 
+intercept_h1 <- -0.34365
+beta_perception_h1 <-  0.29637
+beta_age_h1 <- 0.31470
+beta_edu_h1 <- 0.41557
+beta_party_h1 <- -1.54569
+beta_gender_h1 <- -0.35936
+
+#std errors h1
+se_intercept_h1 <- 0.23675
+se_beta_perception_h1 <- 0.04074 
+se_beta_age_h1 <- 0.04509
+se_beta_edu_h1 <- 0.04113
+se_beta_party_h1 <- 0.04840
+se_beta_gender_h1 <- 0.08494
+
+
+# H1: Predicted probabilities for Perception of Misinformation
+
+#basic model before setting perception of misinfo 1 or 5 value jumps
+logit_h1 <- intercept_h1 + beta_perception_h1 * d$perception_misinfo + 
+            beta_age_h1 * d$age + beta_edu_h1 * d$profile_educ5 + 
+            beta_party_h1 * d$party_id + beta_gender_h1 * d$gender
+pred_prob_h1 <- 1 / (1 + exp(-logit_h1))
+
+#setting my IV for the reasonable jumps 1 (not at all concerned) and 5 (very concerned)
+logit_h1_1 <- intercept_h1 + beta_perception_h1 * 1 + 
+            beta_age_h1 * d$age + beta_edu_h1 * d$profile_educ5 + 
+            beta_party_h1 * d$party_id + beta_gender_h1 * d$gender
+pred_prob_1 <- 1 / (1 + exp(-logit_h1_1))
+
+logit_h1_5 <- intercept_h1 + beta_perception_h1 * 5 + 
+            beta_age_h1 * d$age + beta_edu_h1 * d$profile_educ5 + 
+            beta_party_h1 * d$party_id + beta_gender_h1 * d$gender
+pred_prob_5 <- 1 / (1 + exp(-logit_h1_5))
+
+
+pred_h1 <-  - pred_prob_5 - pred_prob_1
+
+#get the average difference - REPORT THIS!!!! - put this average difference in a table 
+summary(pred_h1)
+
+#using mikes simulated method for stata logit example with Joan 
+#Calculating CIs 
+# Run the logistic regression model
+m1 <- glm(trust_vote ~ perception_misinfo + age + profile_educ5 + party_id + gender, 
+          family = binomial(link = "logit"), 
+          data = d)
+summary(m1)
+
+# Extract coefficients 
+coefs <- coef(m1)
+
+#drop observations that are not in the model so taht the quantities of interest are not calculated for those observations 
+d <- d[complete.cases(d),]
+
+#covariance matrix
+vcov_matrix <- vcov(m1)
+
+
+# Draw 1000 samples of coefficients from the multivariate normal distribution
+set.seed(17)  # set seed for reproducibility -ask mike what to set seed to??
+n_draws <- 1000
+sim_coefs <- rmvnorm(n_draws, mean = coefs, sigma = vcov_matrix)
+
+#examine the coefficients and check that the means are close to original estimates
+#checked they are
+rbind(coefs, apply(sim_coefs, 2, mean))
+
+#calculate the pred prob of success with all control variables set to their observed values
+#This will create a baseline pred prob of success for the model without manipulating any of my variables 
+#p_mean is set to a missing value and then filled in by each of the 1000 variables created in the loop 
+
+p_mean <- NULL
+px1_1_mean <- NULL
+px1_5_mean <- NULL
+
+# Loop over simulated coefficients to calculate predicted probabilities
+# Next, in the loop, calculate the quantity of interest for each observation and each set
+# Finally, fill in the px1_0_mean variable with the mean across all observations from each set of simulated coefficients.
+for (i in 1:n_draws) {
+  # Baseline probability (observed values)
+  p_mean[i] <- mean(invlogit(sim_coefs[i, 1] + 
+                             sim_coefs[i, 2] * d$perception_misinfo + 
+                             sim_coefs[i, 3] * d$age + 
+                             sim_coefs[i, 4] * d$profile_educ5 + 
+                             sim_coefs[i, 5] * d$party_id + 
+                             sim_coefs[i, 6] * d$gender))
+summary(p_mean)
+  
+#Probability for perception misinfo is not at all a concern
+#x1 = 1 (counterfactual)
+  px1_1_mean[i] <- mean(invlogit(sim_coefs[i, 1] + 
+                                 sim_coefs[i, 2] * 1 + 
+                                 sim_coefs[i, 3] * d$age + 
+                                 sim_coefs[i, 4] * d$profile_educ5 + 
+                                 sim_coefs[i, 5] * d$party_id + 
+                                 sim_coefs[i, 6] * d$gender))
+
+#Probability for perception misinfo is Extremely concerning 
+#x1 = 5 (counterfactual)
+  px1_5_mean[i] <- mean(invlogit(sim_coefs[i, 1] + 
+                                 sim_coefs[i, 2] * 5 + 
+                                 sim_coefs[i, 3] * d$age + 
+                                 sim_coefs[i, 4] * d$profile_educ5 + 
+                                 sim_coefs[i, 5] * d$party_id + 
+                                 sim_coefs[i, 6] * d$gender))
+}
+
+# Calculate the effect of x1 (first difference)
+effectx1_mean <- px1_5_mean - px1_1_mean
+
+# Summarize results
+summary(effectx1_mean)
+```
+
+```{r FIXED CI CODE TO MATCH MIKE}
+
+# Marginal effect of x2 (party ID)
+# Notes: party_id is treated as x2, the fifth variable in the model (sim_coefs[i, 5]).
+
+margeffx2_mean <- NULL
+for (i in 1:1000) {
+  # Predicted probabilities for party_id at observed values of perception_misinfo
+  P <- invlogit(sim_coefs[i, 1] + 
+                sim_coefs[i, 2] * d$perception_misinfo + 
+                sim_coefs[i, 3] * d$age + 
+                sim_coefs[i, 4] * d$profile_educ5 + 
+                sim_coefs[i, 5] * d$party_id + 
+                sim_coefs[i, 6] * d$gender)
+  
+  # Marginal effect of party ID
+  margeffx2_mean[i] <- mean(sim_coefs[i, 5] * P * (1 - P))
+}
+
+# Step 4: Summarize the means for each quantity of interest
+# Notes: The `means` list includes all quantities of interest, including the marginal effect of party ID.
+means <- list(p_mean, px1_1_mean, px1_5_mean, effectx1_mean, margeffx2_mean)
+
+# Summarize the means using lapply for efficiency
+lapply(means, summary)
+
+# Step 5: Calculate 95% confidence intervals
+# Notes: This uses lapply to calculate the 2.5th and 97.5th percentiles for all quantities.
+q <- do.call("rbind", lapply(means, quantile, c(0.025, 0.975)))
+
+# Combine results into a single matrix with mean and confidence intervals
+results <- cbind(q[, 1], lapply(means, mean), q[, 2])
+colnames(results) <- c("2.5", "Mean", "97.5")
+rownames(results) <- c("Baseline (p_mean)", 
+                       "Perception of Misinfo = 1 not at all", 
+                       "Perception of Misinfo = 5 extremely concerned", 
+                       "Effect of x1 Perception of Misinformation (effectx1_mean)", 
+                       "Marginal Effect of x2 Party ID (margeffx2_mean)")
+
+# Display results
+results
+
+#I picked party ID because I anticipate that republicans will be less trusting of the vote count and not be concerned with perceptions 
+#x2 is a control variable... yes?? I wasn't sure if I interpereted your code correct...
+```
+
+```{r}
+# Create a new dataset for plotting
+plot_data <- data.frame(
+  perception_misinfo = 1:5,
+  mean_predicted_prob = c(mean(px1_1_mean), NA, NA, NA, mean(px1_5_mean)),  # Placeholder for now
+  lower_ci = 0.139,  
+  upper_ci = 0.234   
+)
+
+# Calculate the mean and confidence intervals for each level of perception_misinfo
+for (i in 1:5) {
+  pred_probs <- apply(sim_coefs, 1, function(coefs) {
+    invlogit(coefs[1] + 
+             coefs[2] * i + 
+             coefs[3] * mean(d$age, na.rm = TRUE) + 
+             coefs[4] * mean(d$profile_educ5, na.rm = TRUE) + 
+             coefs[5] * mean(d$party_id, na.rm = TRUE) + 
+             coefs[6] * mean(d$gender, na.rm = TRUE))
+  })
+  plot_data$mean_predicted_prob[i] <- mean(pred_probs)
+  plot_data$lower_ci[i] <- quantile(pred_probs, probs = 0.025)
+  plot_data$upper_ci[i] <- quantile(pred_probs, probs = 0.975)
+}
+
+# Plot the predicted probabilities with confidence intervals
+
+ggplot(plot_data, aes(x = perception_misinfo, y = mean_predicted_prob)) +
+  geom_point(size = 3, color = "blue") +
+  geom_line(color = "blue", size = 1) +
+  geom_ribbon(aes(ymin = lower_ci, ymax = upper_ci), alpha = 0.2, fill = "blue") +
+  labs(
+    title = "Predicted Probability by Perception of Misinformation",
+    x = "Perception of Misinformation (1 = Not at all serious, 5 = Extremely serious)",
+    y = "Mean Predicted Probability"
+  ) +
+  theme_minimal(base_size = 10)
+```
