@@ -54,73 +54,69 @@ df <- df %>%
   filter(w2fb4 >= 1 & w2fb4 <= 5) %>%
   mutate(pol_newsfb = w2fb4)
 
-# Add control variables
+# Recode age into groups
 df <- df %>%
   mutate(
-    age_group = case_when(
-      profile_age >= 18 & profile_age <= 29 ~ "18-29",
-      profile_age >= 30 & profile_age <= 45 ~ "30-45",
-      profile_age >= 46 & profile_age <= 64 ~ "46-64",
-      profile_age >= 65 ~ "65+",
-      TRUE ~ NA_character_  # Handle missing or invalid ages
-    )
+    age = case_when(
+      profile_age >= 18 & profile_age <= 29 ~ 1,  # Age group 18-29
+      profile_age >= 30 & profile_age <= 45 ~ 2,  # Age group 30-45
+      profile_age >= 46 & profile_age <= 64 ~ 3,  # Age group 46-64
+      profile_age >= 65 ~ 4,                     # Age group 65+
+      TRUE ~ NA_real_                            # Handle missing or invalid ages
+    )  
   )
 
-df <- df %>%
-  mutate(
-    education_group = case_when(
-      profile_educ5 == 1 ~ "Less than High School",
-      profile_educ5 == 2 ~ "High School Graduate",
-      profile_educ5 == 3 ~ "Some College",
-      profile_educ5 == 4 ~ "College Graduate",
-      profile_educ5 == 5 ~ "Postgraduate Degree",
-      TRUE ~ NA_character_  # Handle missing or invalid data
-    )
-  )
-
+# Recode political affiliation
 df <- df %>%
   mutate(
     party_id = case_when(
-      w2pid7x %in% c(1, 2, 3) ~ "Democrat",  # Strong, Weak, and Lean Democrat
-      w2pid7x == 4 ~ "Independent",         # Pure Independent
-      w2pid7x %in% c(5, 6, 7) ~ "Republican", # Strong, Weak, and Lean Republican
-      TRUE ~ "Other/Unknown"                # Handle invalid or other cases
+      w2pid7x %in% c(1, 2, 3) ~ 1,  # Democrat
+      w2pid7x %in% c(5, 6, 7) ~ 3,  # Republican
+      w2pid7x == 4 ~ 2,             # Independent
+      TRUE ~ 4                      # Other
     )
   )
 
+# Recode gender (0 = Male, 1 = Female)
+df <- df %>%
+  mutate(
+    gender = case_when(
+      profile_gender == 1 ~ 0,  # Male
+      profile_gender == 2 ~ 1,  # Female
+      TRUE ~ NA_real_
+    )
+  )
 ```
 
-```{r}
-#Final model
+#### Step 1: Run the Models
 
+```{r}
+
+# Run the final logistic regression model
 final_model <- glm(
-  trust_vote ~ perception_misinfo + pol_newsfb + age_group + education_group + party_id,
+  trust_vote ~ perception_misinfo + age + profile_educ5 + party_id + gender,
   family = binomial,
   data = df
 )
-
-# Final Model with Professionally Formatted Output
-
-# Run the final logistic regression model
-final_model <- glm(trust_vote ~ perception_misinfo + age_group + education_group + party_id, 
-                   family = binomial, data = df)
 
 # Define coefficient map for readability
 coef_map <- c(
   "(Intercept)" = "Intercept",
   "perception_misinfo" = "Perception of Misinformation on Facebook",
-  "pol_newsfb" = "Exposure to Political News on Facebook",
-  "age_group30-45" = "Age: 30-45",
-  "age_group46-64" = "Age: 46-64",
-  "age_group65+" = "Age: 65+",
-  "education_groupHigh School Graduate" = "Education: High School Graduate",
-  "education_groupSome College" = "Education: Some College",
-  "education_groupCollege Graduate" = "Education: College Graduate",
-  "education_groupPostgraduate Degree" = "Education: Postgraduate Degree",
-  "party_idIndependent" = "Party ID: Independent",
-  "party_idRepublican" = "Party ID: Republican",
-  "party_idOther/Unknown" = "Party ID: Other/Unknown"
+  "age" = "Age",
+  "profile_educ5" = "Education Level",
+  "party_id" = "Party ID",
+  "gender" = "Gender (1 = Female)"
 )
+
+#Run other regressional model for the output for H2!! 
+final_model_h2 <- glm(
+  trust_vote ~ pol_newsfb + age + profile_educ5 + party_id + gender,
+  family = binomial(link = "logit"),
+  data = df
+)
+
+summary(final_model_h2)
 
 # Generate a professionally formatted summary table
 modelsummary(
@@ -128,23 +124,34 @@ modelsummary(
   coef_map = coef_map,
   statistic = c("std.error", "p.value"),
   stars = TRUE,
-  title = "Final Logit Regression Results Trust in Vote Accuracy by Perception of Misinfo on FB ",
+  title = "Logit Regression Results Trust in Vote Accuracy by Perception of Misinfo on FB ",
   output = "kableExtra"
 ) %>%
   kable_styling(
     full_width = FALSE, 
     bootstrap_options = c("striped", "hover", "condensed"),
     latex_options = c("scale_down")
-  )
+  ) 
 ```
+
+#### Step 2: Provide Predicted Probabilities
+
+Probability of trusting the 2020 Presidential vote count Logit Model Equation
+
+$$
+P(\text{Trust Vote Count}) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 \cdot \text{Age} + \beta_2 \cdot \text{Gender} + \beta_3 \cdot \text{Party ID} + \beta_4 \cdot \text{Education Level})}}
+$$
 
 ```{r}
 
-# Predicted Probabilities for Perception of Misinformation with Confidence Intervals
-pred_misinfo <- data.frame(perception_misinfo = 1:5, 
-                           age_group = "30-45", 
-                           education_group = "College Graduate", 
-                           party_id = "Independent")
+# Create the prediction data frame with `education` as an ordered factor
+pred_misinfo <- data.frame(
+  perception_misinfo = 1:5,  # Range of perception levels (1 to 5)
+  age = 2,  # "30-45"
+  profile_educ5 = 4, #College or higher
+  party_id = 2,  # Republican
+  gender = 1  # Female
+)
 
 # Get predictions with standard errors
 predicted <- predict(final_model, newdata = pred_misinfo, type = "response", se.fit = TRUE)
@@ -154,15 +161,22 @@ pred_misinfo$predicted_prob <- predicted$fit
 pred_misinfo$lower_ci <- predicted$fit - 1.96 * predicted$se.fit
 pred_misinfo$upper_ci <- predicted$fit + 1.96 * predicted$se.fit
 
-# Visualization for Perception of Misinformation with CIs
+pred_misinfo$lower_ci
+pred_misinfo$upper_ci
 
+# Visualization for Perception of Misinformation with CIs
 ggplot(pred_misinfo, aes(x = perception_misinfo, y = predicted_prob)) +
   geom_point(size = 3, color = "blue") +
   geom_line(color = "blue", size = 1) +
   geom_ribbon(aes(ymin = lower_ci, ymax = upper_ci), alpha = 0.2, fill = "blue") +
-  labs(title = "Predicted Trust in Vote Count by Perception of Misinformation",
-       x = "Perception of Misinformation (1 = Not at all serious, 5 = Extremely serious)",
-       y = "Predicted Probability of High Trust") +
+  labs(
+    title = "Predicted Trust in Vote Count by Perception of Misinformation",
+    x = "Perception of Misinformation (1 = Not at all serious, 5 = Extremely serious)",
+    y = "Predicted Probability of High Trust"
+  ) +
   theme_minimal(base_size = 12)
+```
+
+```{r}
 
 ```

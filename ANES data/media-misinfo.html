@@ -8,7 +8,7 @@
 
 <meta name="author" content="Isabelle Gibson">
 
-<title>media-misinfo</title>
+<title>Facebook, Misinformation, and Election Trust: Analyzing Public Confidence in the 2020 U.S. Vote</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -48,7 +48,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">media-misinfo</h1>
+<h1 class="title">Facebook, Misinformation, and Election Trust: Analyzing Public Confidence in the 2020 U.S. Vote</h1>
 </div>
 
 
@@ -71,271 +71,78 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="appendix" class="level2">
+<h2 class="anchored" data-anchor-id="appendix">Appendix</h2>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.0000  0.0000  0.0000  0.4638  1.0000  1.0000 </code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- -7.000   3.000   4.000   2.991   5.000   5.000 </code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
--7.0000  1.0000  1.0000  0.8833  2.0000  5.0000 </code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>18-29 30-45 46-64   65+ 
-  622  1773  1761  1594 </code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   1    2    3    4    5 
- 217  824 2219 1438 1052 </code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   Democrat Independent  Republican 
-        960        3811         979 </code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   1    2 
-2905 2845 </code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>   
-      -7   -6   -5    1    2    3    4    5
-  0    5  473   49   66  255  612  828  795
-  1    5    0   53   21  125  375  917 1171</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   
-    Democrat Independent Republican
-  0      178        2689        216
-  1      782        1122        763</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      Democrat Independent Republican
-                                     
-0 -7         0           5          0
-  -6         0         473          0
-  -5         7          34          8
-  1          2          60          4
-  2         21         213         21
-  3         57         489         66
-  4         51         707         70
-  5         40         708         47
-1 -7         0           4          1
-  -6         0           0          0
-  -5        15          22         16
-  1          6          14          1
-  2         38          52         35
-  3        116         148        111
-  4        269         409        239
-  5        338         473        360</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$Democrat
- trust_vote_binary       -7       -6        -5        1          2           3
-                 0 0.0% (0) 0.0% (0) 3.9%  (7) 1.1% (2) 11.8% (21) 32.0%  (57)
-                 1 0.0% (0) 0.0% (0) 1.9% (15) 0.8% (6)  4.9% (38) 14.8% (116)
-             Total 0.0% (0) 0.0% (0) 2.3% (22) 0.8% (8)  6.1% (59) 18.0% (173)
-           4           5        Total
- 28.7%  (51) 22.5%  (40) 100.0% (178)
- 34.4% (269) 43.2% (338) 100.0% (782)
- 33.3% (320) 39.4% (378) 100.0% (960)
+<div class="cell-output-display">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Descriptive Statistics for Trust in Vote Count Accuracy (2020 Election)</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Sample Size</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mean</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Standard Deviation</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Minimum</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Maximum</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">3883</td>
+<td style="text-align: right;">0.4826165</td>
+<td style="text-align: right;">0.4997621</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
 
-$Independent
- trust_vote_binary       -7          -6        -5         1          2
-                 0 0.2% (5) 17.6% (473) 1.3% (34) 2.2% (60) 7.9% (213)
-                 1 0.4% (4)  0.0%   (0) 2.0% (22) 1.2% (14) 4.6%  (52)
-             Total 0.2% (9) 12.4% (473) 1.5% (56) 1.9% (74) 7.0% (265)
-           3             4             5          Total
- 18.2% (489) 26.3%   (707) 26.3%   (708) 100.0% (2,689)
- 13.2% (148) 36.5%   (409) 42.2%   (473) 100.0% (1,122)
- 16.7% (637) 29.3% (1,116) 31.0% (1,181) 100.0% (3,811)
 
-$Republican
- trust_vote_binary       -7       -6        -5        1         2           3
-                 0 0.0% (0) 0.0% (0) 3.7%  (8) 1.9% (4) 9.7% (21) 30.6%  (66)
-                 1 0.1% (1) 0.0% (0) 2.1% (16) 0.1% (1) 4.6% (35) 14.5% (111)
-             Total 0.1% (1) 0.0% (0) 2.5% (24) 0.5% (5) 5.7% (56) 18.1% (177)
-           4           5        Total
- 32.4%  (70) 21.8%  (47) 100.0% (216)
- 31.3% (239) 47.2% (360) 100.0% (763)
- 31.6% (309) 41.6% (407) 100.0% (979)</code></pre>
 </div>
 <div class="cell-output-display">
-<table class="kable_wrapper table caption-top table-sm table-striped small" data-quarto-postprocess="true">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<tbody>
-<tr class="odd">
-<td><table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Descriptive Statistics for Perception of Misinformation on Facebook</caption>
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">trust_vote_binary</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">-7</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">-6</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">-5</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">1</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">2</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">3</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">4</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">5</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Total</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Sample Size</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mean</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Standard Deviation</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Minimum</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Maximum</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">0</td>
-<td style="text-align: left;">0.0% (0)</td>
-<td style="text-align: left;">0.0% (0)</td>
-<td style="text-align: left;">3.9% (7)</td>
-<td style="text-align: left;">1.1% (2)</td>
-<td style="text-align: left;">11.8% (21)</td>
-<td style="text-align: left;">32.0% (57)</td>
-<td style="text-align: left;">28.7% (51)</td>
-<td style="text-align: left;">22.5% (40)</td>
-<td style="text-align: left;">100.0% (178)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">1</td>
-<td style="text-align: left;">0.0% (0)</td>
-<td style="text-align: left;">0.0% (0)</td>
-<td style="text-align: left;">1.9% (15)</td>
-<td style="text-align: left;">0.8% (6)</td>
-<td style="text-align: left;">4.9% (38)</td>
-<td style="text-align: left;">14.8% (116)</td>
-<td style="text-align: left;">34.4% (269)</td>
-<td style="text-align: left;">43.2% (338)</td>
-<td style="text-align: left;">100.0% (782)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Total</td>
-<td style="text-align: left;">0.0% (0)</td>
-<td style="text-align: left;">0.0% (0)</td>
-<td style="text-align: left;">2.3% (22)</td>
-<td style="text-align: left;">0.8% (8)</td>
-<td style="text-align: left;">6.1% (59)</td>
-<td style="text-align: left;">18.0% (173)</td>
-<td style="text-align: left;">33.3% (320)</td>
-<td style="text-align: left;">39.4% (378)</td>
-<td style="text-align: left;">100.0% (960)</td>
+<td style="text-align: right;">3883</td>
+<td style="text-align: right;">3.891579</td>
+<td style="text-align: right;">1.03635</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
 </tr>
 </tbody>
-</table></td>
-<td><table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+</table>
+
+
+</div>
+<div class="cell-output-display">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<caption>Descriptive Statistics for Exposure to Political News on Facebook</caption>
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">trust_vote_binary</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">-7</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">-6</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">-5</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">1</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">2</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">3</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">4</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">5</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Total</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Sample Size</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mean</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Standard Deviation</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Minimum</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Maximum</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">0</td>
-<td style="text-align: left;">0.2% (5)</td>
-<td style="text-align: left;">17.6% (473)</td>
-<td style="text-align: left;">1.3% (34)</td>
-<td style="text-align: left;">2.2% (60)</td>
-<td style="text-align: left;">7.9% (213)</td>
-<td style="text-align: left;">18.2% (489)</td>
-<td style="text-align: left;">26.3% (707)</td>
-<td style="text-align: left;">26.3% (708)</td>
-<td style="text-align: left;">100.0% (2,689)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">1</td>
-<td style="text-align: left;">0.4% (4)</td>
-<td style="text-align: left;">0.0% (0)</td>
-<td style="text-align: left;">2.0% (22)</td>
-<td style="text-align: left;">1.2% (14)</td>
-<td style="text-align: left;">4.6% (52)</td>
-<td style="text-align: left;">13.2% (148)</td>
-<td style="text-align: left;">36.5% (409)</td>
-<td style="text-align: left;">42.2% (473)</td>
-<td style="text-align: left;">100.0% (1,122)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Total</td>
-<td style="text-align: left;">0.2% (9)</td>
-<td style="text-align: left;">12.4% (473)</td>
-<td style="text-align: left;">1.5% (56)</td>
-<td style="text-align: left;">1.9% (74)</td>
-<td style="text-align: left;">7.0% (265)</td>
-<td style="text-align: left;">16.7% (637)</td>
-<td style="text-align: left;">29.3% (1,116)</td>
-<td style="text-align: left;">31.0% (1,181)</td>
-<td style="text-align: left;">100.0% (3,811)</td>
-</tr>
-</tbody>
-</table></td>
-<td><table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">trust_vote_binary</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">-7</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">-6</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">-5</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">1</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">2</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">3</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">4</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">5</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Total</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">0</td>
-<td style="text-align: left;">0.0% (0)</td>
-<td style="text-align: left;">0.0% (0)</td>
-<td style="text-align: left;">3.7% (8)</td>
-<td style="text-align: left;">1.9% (4)</td>
-<td style="text-align: left;">9.7% (21)</td>
-<td style="text-align: left;">30.6% (66)</td>
-<td style="text-align: left;">32.4% (70)</td>
-<td style="text-align: left;">21.8% (47)</td>
-<td style="text-align: left;">100.0% (216)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">1</td>
-<td style="text-align: left;">0.1% (1)</td>
-<td style="text-align: left;">0.0% (0)</td>
-<td style="text-align: left;">2.1% (16)</td>
-<td style="text-align: left;">0.1% (1)</td>
-<td style="text-align: left;">4.6% (35)</td>
-<td style="text-align: left;">14.5% (111)</td>
-<td style="text-align: left;">31.3% (239)</td>
-<td style="text-align: left;">47.2% (360)</td>
-<td style="text-align: left;">100.0% (763)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Total</td>
-<td style="text-align: left;">0.1% (1)</td>
-<td style="text-align: left;">0.0% (0)</td>
-<td style="text-align: left;">2.5% (24)</td>
-<td style="text-align: left;">0.5% (5)</td>
-<td style="text-align: left;">5.7% (56)</td>
-<td style="text-align: left;">18.1% (177)</td>
-<td style="text-align: left;">31.6% (309)</td>
-<td style="text-align: left;">41.6% (407)</td>
-<td style="text-align: left;">100.0% (979)</td>
-</tr>
-</tbody>
-</table></td>
+<td style="text-align: right;">3883</td>
+<td style="text-align: right;">2.884625</td>
+<td style="text-align: right;">1.20922</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
 </tr>
 </tbody>
 </table>
@@ -344,121 +151,404 @@ $Republican
 </div>
 </div>
 <div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-glm(formula = trust_vote_binary ~ exposure_misinformation + trust_political_fb + 
-    age_group + education + party_id + gender, family = binomial, 
-    data = df)
+<div class="cell-output-display">
+<!-- preamble start -->
 
-Coefficients:
-                        Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)             -0.09966    0.21619  -0.461 0.644798    
-exposure_misinformation  0.19977    0.01800  11.095  &lt; 2e-16 ***
-trust_political_fb       0.09921    0.02975   3.335 0.000853 ***
-age_group30-45          -0.02650    0.11984  -0.221 0.824999    
-age_group46-64           0.11076    0.11983   0.924 0.355300    
-age_group65+             0.48495    0.12272   3.952 7.76e-05 ***
-education2               0.14200    0.20045   0.708 0.478678    
-education3               0.45835    0.18856   2.431 0.015069 *  
-education4               1.09027    0.19326   5.642 1.68e-08 ***
-education5               1.46625    0.19960   7.346 2.04e-13 ***
-party_idIndependent     -2.34106    0.09719 -24.087  &lt; 2e-16 ***
-party_idRepublican      -0.19728    0.11811  -1.670 0.094846 .  
-gender2                 -0.27616    0.06625  -4.168 3.07e-05 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    <script>
+      function styleCell_ghq8ep9i6yeyzo2fddjx(i, j, css_id) {
+        var table = document.getElementById("tinytable_ghq8ep9i6yeyzo2fddjx");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_ghq8ep9i6yeyzo2fddjx');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_ghq8ep9i6yeyzo2fddjx(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_ghq8ep9i6yeyzo2fddjx");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(0, 0, 'tinytable_css_idh7sql6cink8sx4cxdeu4') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(0, 1, 'tinytable_css_idh7sql6cink8sx4cxdeu4') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(0, 2, 'tinytable_css_iddnw03r0d3w5th1ssvyws') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(0, 3, 'tinytable_css_iddnw03r0d3w5th1ssvyws') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(0, 4, 'tinytable_css_iddnw03r0d3w5th1ssvyws') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(0, 5, 'tinytable_css_iddnw03r0d3w5th1ssvyws') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(0, 6, 'tinytable_css_iddnw03r0d3w5th1ssvyws') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(0, 7, 'tinytable_css_iddnw03r0d3w5th1ssvyws') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(1, 0, 'tinytable_css_idc20jh1rcshok7p61v1bf') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(1, 1, 'tinytable_css_idc20jh1rcshok7p61v1bf') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(1, 2, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(1, 3, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(1, 4, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(1, 5, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(1, 6, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(1, 7, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(2, 0, 'tinytable_css_idc20jh1rcshok7p61v1bf') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(2, 1, 'tinytable_css_idc20jh1rcshok7p61v1bf') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(2, 2, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(2, 3, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(2, 4, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(2, 5, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(2, 6, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(2, 7, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(3, 0, 'tinytable_css_idc20jh1rcshok7p61v1bf') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(3, 1, 'tinytable_css_idc20jh1rcshok7p61v1bf') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(3, 2, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(3, 3, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(3, 4, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(3, 5, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(3, 6, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(3, 7, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(4, 0, 'tinytable_css_idc20jh1rcshok7p61v1bf') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(4, 1, 'tinytable_css_idc20jh1rcshok7p61v1bf') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(4, 2, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(4, 3, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(4, 4, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(4, 5, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(4, 6, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(4, 7, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(5, 0, 'tinytable_css_idc20jh1rcshok7p61v1bf') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(5, 1, 'tinytable_css_idc20jh1rcshok7p61v1bf') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(5, 2, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(5, 3, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(5, 4, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(5, 5, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(5, 6, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(5, 7, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(6, 0, 'tinytable_css_idc20jh1rcshok7p61v1bf') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(6, 1, 'tinytable_css_idc20jh1rcshok7p61v1bf') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(6, 2, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(6, 3, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(6, 4, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(6, 5, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(6, 6, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+window.addEventListener('load', function () { styleCell_ghq8ep9i6yeyzo2fddjx(6, 7, 'tinytable_css_idgjpmmltgd68ifdyr2vl3') })
+    </script>
 
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 7941.1  on 5749  degrees of freedom
-Residual deviance: 5883.8  on 5737  degrees of freedom
-AIC: 5909.8
-
-Number of Fisher Scoring iterations: 5</code></pre>
+    <style>
+    .table td.tinytable_css_idh7sql6cink8sx4cxdeu4, .table th.tinytable_css_idh7sql6cink8sx4cxdeu4 {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_iddnw03r0d3w5th1ssvyws, .table th.tinytable_css_iddnw03r0d3w5th1ssvyws {  text-align: right;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idc20jh1rcshok7p61v1bf, .table th.tinytable_css_idc20jh1rcshok7p61v1bf {  text-align: left; }
+    .table td.tinytable_css_idgjpmmltgd68ifdyr2vl3, .table th.tinytable_css_idgjpmmltgd68ifdyr2vl3 {  text-align: right; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_ghq8ep9i6yeyzo2fddjx" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        </thead><caption>Trust in Vote Count 2020 Election on Perception of Misinfo on FB</caption>
+              <tbody><tr>
+                <th scope="col">Trust in Vote Count 2020 Election</th>
+                <th scope="col"> </th>
+                <th scope="col">Not at all serious</th>
+                <th scope="col">Slightly serious</th>
+                <th scope="col">Moderately serious</th>
+                <th scope="col">Very serious</th>
+                <th scope="col">Extremely serious</th>
+                <th scope="col">All</th>
+              </tr>
+        
+        
+        </tbody><tbody>
+                <tr>
+                  <td>High Trust</td>
+                  <td>N    </td>
+                  <td>20 </td>
+                  <td>107 </td>
+                  <td>312 </td>
+                  <td>661 </td>
+                  <td>774 </td>
+                  <td>1874 </td>
+                </tr>
+                <tr>
+                  <td>          </td>
+                  <td>% row</td>
+                  <td>1.1</td>
+                  <td>5.7 </td>
+                  <td>16.6</td>
+                  <td>35.3</td>
+                  <td>41.3</td>
+                  <td>100.0</td>
+                </tr>
+                <tr>
+                  <td>Low Trust </td>
+                  <td>N    </td>
+                  <td>54 </td>
+                  <td>235 </td>
+                  <td>536 </td>
+                  <td>625 </td>
+                  <td>559 </td>
+                  <td>2009 </td>
+                </tr>
+                <tr>
+                  <td>          </td>
+                  <td>% row</td>
+                  <td>2.7</td>
+                  <td>11.7</td>
+                  <td>26.7</td>
+                  <td>31.1</td>
+                  <td>27.8</td>
+                  <td>100.0</td>
+                </tr>
+                <tr>
+                  <td>All       </td>
+                  <td>N    </td>
+                  <td>74 </td>
+                  <td>342 </td>
+                  <td>848 </td>
+                  <td>1286</td>
+                  <td>1333</td>
+                  <td>3883 </td>
+                </tr>
+                <tr>
+                  <td>          </td>
+                  <td>% row</td>
+                  <td>1.9</td>
+                  <td>8.8 </td>
+                  <td>21.8</td>
+                  <td>33.1</td>
+                  <td>34.3</td>
+                  <td>100.0</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>            (Intercept) exposure_misinformation      trust_political_fb 
-              0.9051431               1.2211191               1.1043010 
-         age_group30-45          age_group46-64            age_group65+ 
-              0.9738491               1.1171291               1.6240987 
-             education2              education3              education4 
-              1.1525809               1.5814590               2.9750919 
-             education5     party_idIndependent      party_idRepublican 
-              4.3329590               0.0962258               0.8209576 
-                gender2 
-              0.7586939 </code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                             2.5 %    97.5 %
-(Intercept)             0.59091009 1.3797901
-exposure_misinformation 1.17928511 1.2655948
-trust_political_fb      1.04258322 1.1717288
-age_group30-45          0.77025600 1.2322815
-age_group46-64          0.88368454 1.4136697
-age_group65+            1.27758540 2.0671148
-education2              0.78015874 1.7126316
-education3              1.09637655 2.2973456
-education4              2.04398417 4.3622372
-education5              2.93982276 6.4317590
-party_idIndependent     0.07933095 0.1161369
-party_idRepublican      0.65090504 1.0343944
-gender2                 0.66615841 0.8637372</code></pre>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script>
+      function styleCell_rqmeke7je9tt1ax3ju8b(i, j, css_id) {
+        var table = document.getElementById("tinytable_rqmeke7je9tt1ax3ju8b");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_rqmeke7je9tt1ax3ju8b');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_rqmeke7je9tt1ax3ju8b(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_rqmeke7je9tt1ax3ju8b");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(0, 0, 'tinytable_css_idrpbx9b2jtwk3w2tmn9oe') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(0, 1, 'tinytable_css_idrpbx9b2jtwk3w2tmn9oe') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(0, 2, 'tinytable_css_id8dsafq8wvow1i7mpv5zm') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(0, 3, 'tinytable_css_id8dsafq8wvow1i7mpv5zm') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(0, 4, 'tinytable_css_id8dsafq8wvow1i7mpv5zm') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(0, 5, 'tinytable_css_id8dsafq8wvow1i7mpv5zm') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(0, 6, 'tinytable_css_id8dsafq8wvow1i7mpv5zm') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(0, 7, 'tinytable_css_id8dsafq8wvow1i7mpv5zm') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(1, 0, 'tinytable_css_idrf5ju1ts93e7zd7d6p3m') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(1, 1, 'tinytable_css_idrf5ju1ts93e7zd7d6p3m') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(1, 2, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(1, 3, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(1, 4, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(1, 5, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(1, 6, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(1, 7, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(2, 0, 'tinytable_css_idrf5ju1ts93e7zd7d6p3m') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(2, 1, 'tinytable_css_idrf5ju1ts93e7zd7d6p3m') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(2, 2, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(2, 3, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(2, 4, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(2, 5, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(2, 6, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(2, 7, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(3, 0, 'tinytable_css_idrf5ju1ts93e7zd7d6p3m') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(3, 1, 'tinytable_css_idrf5ju1ts93e7zd7d6p3m') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(3, 2, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(3, 3, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(3, 4, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(3, 5, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(3, 6, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(3, 7, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(4, 0, 'tinytable_css_idrf5ju1ts93e7zd7d6p3m') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(4, 1, 'tinytable_css_idrf5ju1ts93e7zd7d6p3m') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(4, 2, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(4, 3, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(4, 4, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(4, 5, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(4, 6, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(4, 7, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(5, 0, 'tinytable_css_idrf5ju1ts93e7zd7d6p3m') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(5, 1, 'tinytable_css_idrf5ju1ts93e7zd7d6p3m') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(5, 2, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(5, 3, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(5, 4, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(5, 5, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(5, 6, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(5, 7, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(6, 0, 'tinytable_css_idrf5ju1ts93e7zd7d6p3m') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(6, 1, 'tinytable_css_idrf5ju1ts93e7zd7d6p3m') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(6, 2, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(6, 3, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(6, 4, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(6, 5, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(6, 6, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+window.addEventListener('load', function () { styleCell_rqmeke7je9tt1ax3ju8b(6, 7, 'tinytable_css_idhnlosn8qjrclnojkbcie') })
+    </script>
+
+    <style>
+    .table td.tinytable_css_idrpbx9b2jtwk3w2tmn9oe, .table th.tinytable_css_idrpbx9b2jtwk3w2tmn9oe {  text-align: left;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_id8dsafq8wvow1i7mpv5zm, .table th.tinytable_css_id8dsafq8wvow1i7mpv5zm {  text-align: right;  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idrf5ju1ts93e7zd7d6p3m, .table th.tinytable_css_idrf5ju1ts93e7zd7d6p3m {  text-align: left; }
+    .table td.tinytable_css_idhnlosn8qjrclnojkbcie, .table th.tinytable_css_idhnlosn8qjrclnojkbcie {  text-align: right; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_rqmeke7je9tt1ax3ju8b" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        </thead><caption>Trust in vote count by Exposure to Political News on FB</caption>
+              <tbody><tr>
+                <th scope="col">Trust in Vote Count 2020 Election</th>
+                <th scope="col"> </th>
+                <th scope="col">Never</th>
+                <th scope="col">Sometimes</th>
+                <th scope="col">Half the time</th>
+                <th scope="col">Most of time</th>
+                <th scope="col">Always</th>
+                <th scope="col">All</th>
+              </tr>
+        
+        
+        </tbody><tbody>
+                <tr>
+                  <td>High Trust</td>
+                  <td>N    </td>
+                  <td>228 </td>
+                  <td>614 </td>
+                  <td>367 </td>
+                  <td>450 </td>
+                  <td>215 </td>
+                  <td>1874 </td>
+                </tr>
+                <tr>
+                  <td>          </td>
+                  <td>% row</td>
+                  <td>12.2</td>
+                  <td>32.8</td>
+                  <td>19.6</td>
+                  <td>24.0</td>
+                  <td>11.5</td>
+                  <td>100.0</td>
+                </tr>
+                <tr>
+                  <td>Low Trust </td>
+                  <td>N    </td>
+                  <td>234 </td>
+                  <td>662 </td>
+                  <td>452 </td>
+                  <td>450 </td>
+                  <td>211 </td>
+                  <td>2009 </td>
+                </tr>
+                <tr>
+                  <td>          </td>
+                  <td>% row</td>
+                  <td>11.6</td>
+                  <td>33.0</td>
+                  <td>22.5</td>
+                  <td>22.4</td>
+                  <td>10.5</td>
+                  <td>100.0</td>
+                </tr>
+                <tr>
+                  <td>All       </td>
+                  <td>N    </td>
+                  <td>462 </td>
+                  <td>1276</td>
+                  <td>819 </td>
+                  <td>900 </td>
+                  <td>426 </td>
+                  <td>3883 </td>
+                </tr>
+                <tr>
+                  <td>          </td>
+                  <td>% row</td>
+                  <td>11.9</td>
+                  <td>32.9</td>
+                  <td>21.1</td>
+                  <td>23.2</td>
+                  <td>11.0</td>
+                  <td>100.0</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="media-misinfo_files/figure-html/Visualize%20Key%20variables-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="media-misinfo_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="media-misinfo_files/figure-html/Visualize%20Key%20variables-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="media-misinfo_files/figure-html/Visualize%20Key%20variables-3.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="media-misinfo_files/figure-html/Visualize%20Key%20variables-4.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="media-misinfo_files/figure-html/Visualize%20Key%20variables-5.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="media-misinfo_files/figure-html/Visualize%20Key%20variables-6.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="media-misinfo_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="media-misinfo_files/figure-html/Visualize%20Model%20of%20Coefficients-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
+</section>
 
 </main>
 <!-- /main column -->

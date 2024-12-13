@@ -1,23 +1,14 @@
 ---
-title: "Phase 3: Final Model"
-author: "Isabelle Gibson"
 format: 
   pdf:
     fig-pos: "H"
-    linestretch: 2
-    fontsize: "12pt"
-    margin-bottom: "1in"
-    margin-top: "1in"
-    margin-left: "1in"
-    margin-right: "1in"
 editor: visual
-execute: 
-  message: false
-  warning: false
-  echo: false
+knitr:
+  opts_chunk:
+    echo: false
+    message: false
+    warning: false
 ---
-
-Run the libraries and load the data
 
 ```{r}
 # Load necessary libraries
@@ -32,12 +23,15 @@ library(margins)
 library(arm)
 library(mvtnorm)
 library(foreign)
+library(car)
+library(tibble)
+library(car)
+
 
 d <- read_csv("anes_socialmedia_study.csv")
 ```
 
-```{r Recode varables}
-
+```{r Recode data}
 # Recode the dependent variable (trust in vote accuracy) to binary
 d <- d %>%
   mutate(trust_vote = ifelse(w2trustvote >= 4, 1, 0))  # 1 = High trust, 0 = Low trust
@@ -98,9 +92,90 @@ d <- d %>%
   filter(!is.na(age)) 
 ```
 
-### Step 1: Run Final Models for H1 and H2
+Descriptive Statistics
 
-```{r}
+```{r Descriptives for key variables}
+# Descriptive statistics for Trust in Vote Accuracy (trust_vote)
+trust_vote_stats <- d %>%
+  summarise(
+    N = n(),
+    Mean = mean(trust_vote, na.rm = TRUE),
+    SD = sd(trust_vote, na.rm = TRUE),
+    Min = min(trust_vote, na.rm = TRUE),
+    Max = max(trust_vote, na.rm = TRUE)
+  )
+
+# Trust in Vote Accuracy Table
+trust_vote_stats %>%
+  knitr::kable(col.names = c("Sample Size", "Mean", "Standard Deviation", "Minimum", "Maximum"),
+               caption = "Descriptive Statistics for Trust in Vote Count Accuracy (2020 Election)") %>%
+  kableExtra::kable_styling(full_width = F, bootstrap_options = c("striped", "hover"))
+
+
+# Descriptive statistics for Perception of Misinformation on Facebook (perception_misinfo)
+misinfo_stats <- d %>%
+  summarise(
+    N = n(),
+    Mean = mean(perception_misinfo, na.rm = TRUE),
+    SD = sd(perception_misinfo, na.rm = TRUE),
+    Min = min(perception_misinfo, na.rm = TRUE),
+    Max = max(perception_misinfo, na.rm = TRUE)
+  )
+
+# Perception of Misinformation Table
+misinfo_stats %>%
+  knitr::kable(col.names = c("Sample Size", "Mean", "Standard Deviation", "Minimum", "Maximum"),
+               caption = "Descriptive Statistics for Perception of Misinformation on Facebook") %>%
+  kableExtra::kable_styling(full_width = F, bootstrap_options = c("striped", "hover"))
+
+
+#control variables
+# Descriptive statistics for Age (age)
+age_stats <- d %>%
+  summarise(
+    N = n(),
+    Mean = mean(age, na.rm = TRUE),
+    SD = sd(age, na.rm = TRUE),
+    Min = min(age, na.rm = TRUE),
+    Max = max(age, na.rm = TRUE)
+  )
+
+# Age Table
+age_stats %>%
+  knitr::kable(col.names = c("Sample Size", "Mean", "Standard Deviation", "Minimum", "Maximum"),
+               caption = "Descriptive Statistics for Age Group") %>%
+  kableExtra::kable_styling(full_width = F, bootstrap_options = c("striped", "hover"))
+
+
+# Descriptive statistics for Party ID (party_id)
+party_id_stats <- d %>%
+  group_by(party_id) %>%
+  summarise(Count = n()) %>%
+  ungroup()
+
+# Party ID Table
+party_id_stats %>%
+  knitr::kable(col.names = c("Party ID", "Count"),
+               caption = "Descriptive Statistics for Party Identification") %>%
+  kableExtra::kable_styling(full_width = F, bootstrap_options = c("striped", "hover"))
+
+
+# Descriptive statistics for Gender (gender)
+gender_stats <- d %>%
+  group_by(gender) %>%
+  summarise(Count = n()) %>%
+  ungroup()
+
+# Gender Table
+gender_stats %>%
+  knitr::kable(col.names = c("Gender", "Count"),
+               caption = "Descriptive Statistics for Gender") %>%
+  kableExtra::kable_styling(full_width = F, bootstrap_options = c("striped", "hover"))
+```
+
+Logit Regression Analysis both IVs - Full Model
+
+```{r Full ode Logit Regression}
 final_model_H1 <- glm(
   trust_vote ~ perception_misinfo + age + profile_educ5 + party_id + gender,
   family = binomial(link = "logit"),
@@ -108,13 +183,6 @@ final_model_H1 <- glm(
 )
 
 coefs <- coef(final_model_H1)
-
-final_model_H2 <- glm(
-  trust_vote ~ pol_newsfb + age + profile_educ5 + party_id + gender,
-  family = binomial(link = "logit"),
-  data = d
-)
-
 
 #format the table
 coef_map <- c(
@@ -140,23 +208,45 @@ modelsummary(
     bootstrap_options = c("striped", "hover", "condensed"),
     latex_options = c("scale_down")
   ) 
-
-modelsummary(
-  final_model_H2,
-  coef_map = coef_map,
-  statistic = c("std.error", "p.value"),
-  stars = TRUE,
-  title = "Logit Regression Results Trust in Vote Accuracy by Exposure to Political News on FB ",
-  output = "kableExtra"
-) %>%
-  kable_styling(
-    full_width = FALSE, 
-    bootstrap_options = c("striped", "hover", "condensed"),
-    latex_options = c("scale_down")
-  )
 ```
 
-### Step 2: Predicted Probabilities and CI intervals for H1 and H2
+Cross-tabs
+
+```{r cross tabs}
+datasummary_crosstab(
+  `Perception of Misinfo on FB` ~ `Trust Vote 2020`,
+  data = d %>%
+    mutate(
+      `Trust Vote 2020` = ifelse(trust_vote == 1, "High Trust", "Low Trust"),
+      `Perception of Misinfo on FB` = factor(perception_misinfo,
+        levels = 1:5,
+        labels = c("Not at all serious", "Slightly serious", "Moderately serious", "Very serious", "Extremely serious"))
+    ),
+  title = "Perception of Misinformation on Facebook by Trust in 2020 Vote Count",
+  position = "H"
+)
+
+```
+
+```{r Plot graphs}
+
+# Bar graph for Trust in Vote Accuracy by Perception of Misinformation
+ggplot(d, aes(x = as.factor(perception_misinfo), fill = as.factor(trust_vote))) +
+  geom_bar(position = "fill") +
+  labs(title = "Trust in Vote Accuracy by Perception of Misinfo on FB",
+       x = "Seriousness of Misinformation on FB",
+       y = "Proportion of Trust in Vote Accuracy",
+       fill = "Trust in Vote Accuracy") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_x_discrete(labels = c("1" = "Not at all", "2" = "Slightly", 
+                              "3" = "Moderately", "4" = "Very", 
+                              "5" = "Extremely")) +
+  scale_fill_discrete(labels = c("0" = "Low Trust", "1" = "High Trust")) +
+  theme_minimal(base_size = 12)
+
+```
+
+### Predicted Probabilities and CI intervals for H1 and H2
 
 Probability of trusting the 2020 Presidential vote count Logit Model Equation
 
@@ -164,8 +254,7 @@ $$
 P(\text{Trust Vote Count}) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 \cdot \text{Age} + \beta_2 \cdot \text{Gender} + \beta_3 \cdot \text{Party ID} + \beta_4 \cdot \text{Education Level})}}
 $$
 
-```{r}
-
+```{r predicted probs}
 # Define the coefficients for H1 (Perception of Misinformation) FULL NUMBER not rounded. 
 intercept_h1 <- -0.34365
 beta_perception_h1 <-  0.29637
@@ -302,8 +391,7 @@ effectx1_mean <- px1_5_mean - px1_1_mean
 summary(effectx1_mean)
 ```
 
-```{r FIXED CI CODE TO MATCH MIKE}
-
+```{r caclulating CIs and formatting tables}
 # Step 4: Summarize the means for each quantity of interest
 # Notes: The `means` list includes all quantities of interest
 means <- list(p_mean, px1_1_mean, px1_5_mean, effectx1_mean)
@@ -369,7 +457,7 @@ kable(table_data, col.names = c("Statistic", "Lower 95% CI", "Mean", "Upper 95% 
     bootstrap_options = c("striped", "hover", "condensed"),
     full_width = FALSE
   ) %>%
-  add_header_above(c(" " = 1, "Simulated data Logit Model Summary" = 3))
+  add_header_above(c(" " = 1, "Statistical Simulation Logit Model Summary" = 3))
 ```
 
 ```{r}

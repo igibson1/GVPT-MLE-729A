@@ -1,7 +1,15 @@
 ---
-title: "media-misinfo"
+title: "Facebook, Misinformation, and Election Trust: Analyzing Public Confidence in the 2020 U.S. Vote"
 author: "Isabelle Gibson"
-format: html
+format: 
+  pdf:
+    fig-pos: "H"
+    linestretch: 2
+    fontsize: "12pt"
+    margin-bottom: "1in"
+    margin-top: "1in"
+    margin-left: "1in"
+    margin-right: "1in"
 editor: visual
 execute: 
   message: false
@@ -18,20 +26,215 @@ library(broom)
 library(janitor)
 library(modelsummary)
 library(kableExtra)
+library(knitr)
+library(car)         
+library(tibble)    
+library(arm)
 
 # Load the CSV file
-df <- read_csv("anes_specialstudy_2020-2022_socialmedia_csv_20230705.csv")
+df <- read_csv("anes_socialmedia_study.csv")
 ```
 
 ```{r Recode variables}
 
+# Recode the dependent variable (trust in vote accuracy) to binary
+df <- df %>%
+  mutate(trust_vote = ifelse(w2trustvote >= 4, 1, 0))  # 1 = High trust, 0 = Low trust
+
+# Filter out rows where w2fb1 is -7, -6, or -5, keeping perception_misinfo as the variable name
+df <- df %>%
+  filter(w2fb1 >= 1 & w2fb1 <= 5) %>%
+  mutate(perception_misinfo = w2fb1)
+
+# Filter out rows where w2fb4 is -7, -6, -5, -1, keep name pol_fbnews
+df <- df %>%
+  filter(w2fb4 >= 1 & w2fb4 <= 5) %>%
+  mutate(pol_newsfb = w2fb4)
 ```
+
+## Appendix
 
 ```{r Descriptive statistics for Key variables}
 
+# Descriptive statistics for Trust in Vote Accuracy
+trust_vote_stats <- df %>%
+  summarise(
+    N = n(),
+    Mean = mean(trust_vote, na.rm = TRUE),
+    SD = sd(trust_vote, na.rm = TRUE),
+    Min = min(trust_vote, na.rm = TRUE),
+    Max = max(trust_vote, na.rm = TRUE)
+  )
+
+# Trust in Vote Accuracy Table
+trust_vote_stats %>%
+  knitr::kable(col.names = c("Sample Size", "Mean", "Standard Deviation", "Minimum", "Maximum"),
+               caption = "Descriptive Statistics for Trust in Vote Count Accuracy (2020 Election)") %>%
+  kableExtra::kable_styling(full_width = F, bootstrap_options = c("striped", "hover"))
+
+# Descriptive statistics for Perception of Misinformation on Facebook
+misinfo_stats <- df %>%
+  summarise(
+    N = n(),
+    Mean = mean(perception_misinfo, na.rm = TRUE),
+    SD = sd(perception_misinfo, na.rm = TRUE),
+    Min = min(perception_misinfo, na.rm = TRUE),
+    Max = max(perception_misinfo, na.rm = TRUE)
+  )
+
+# Perception of Misinformation Table
+misinfo_stats %>%
+  knitr::kable(col.names = c("Sample Size", "Mean", "Standard Deviation", "Minimum", "Maximum"),
+               caption = "Descriptive Statistics for Perception of Misinformation on Facebook") %>%
+  kableExtra::kable_styling(full_width = F, bootstrap_options = c("striped", "hover"))
+
+# Descriptive statistics for Exposure to Political News on Facebook
+newsfb_stats <- df %>%
+  summarise(
+    N = n(),
+    Mean = mean(pol_newsfb, na.rm = TRUE),
+    SD = sd(pol_newsfb, na.rm = TRUE),
+    Min = min(pol_newsfb, na.rm = TRUE),
+    Max = max(pol_newsfb, na.rm = TRUE)
+  )
+
+# Exposure to Political News on Facebook Table
+newsfb_stats %>%
+  knitr::kable(col.names = c("Sample Size", "Mean", "Standard Deviation", "Minimum", "Maximum"),
+               caption = "Descriptive Statistics for Exposure to Political News on Facebook") %>%
+  kableExtra::kable_styling(full_width = F, bootstrap_options = c("striped", "hover"))
+```
+
+```{r Binomial regression}
+# Bivariate logistic regression for Perception of Misinformation
+
+# Bivariate logistic regression models
+model_misinfo <- glm(trust_vote ~ perception_misinfo, data = df, family = "binomial")
+model_news <- glm(trust_vote ~ pol_newsfb, data = df, family = "binomial")
+
+summary(model_misinfo)
+summary(model_news)
+
+# Create the first table for Perception of Misinformation on FB
+table1 <- modelsummary(
+  model_misinfo,
+  coef_map = c("(Intercept)" = "Intercept", 
+               "perception_misinfo" = "Perception of Misinformation on FB"),
+  statistic = c("std.error", "p.value"),
+  stars = TRUE,
+  title = "Bivariate Logistic Regression Results: Trust in Vote Accuracy by Perception of Misinformation on FB",
+  output = "kableExtra"
+) %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
+
+# Create the second table for Exposure to Political News on FB
+table2 <- modelsummary(
+  model_news,
+  coef_map = c("(Intercept)" = "Intercept", 
+               "pol_newsfb" = "Exposure to Political News on FB"),
+  statistic = c("std.error", "p.value"),
+  stars = TRUE,
+  title = "Bivariate Logistic Regression Results: Trust in Vote Accuracy by Exposure to Political News on FB",
+  output = "kableExtra"
+) %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
+
+# Display both tables
+table1
+table2
 
 ```
 
-```{r Cross Tabs}
+```{r VIF}
+
+# Run the logistic regression model
+logit_model <- glm(trust_vote ~ perception_misinfo + pol_newsfb, family = binomial, data = df)
+
+# Calculate VIF values
+vif_values <- vif(logit_model)
+
+# Convert VIF output to a data frame for easier formatting
+vif_df <- as.data.frame(vif_values)
+vif_df <- rownames_to_column(vif_df, var = "Variable")  # Add variable names
+
+# Rename the columns
+colnames(vif_df) <- c("Independent Variable", "VIF Value")
+
+# Create and display a basic table suitable for PDF
+vif_df %>%
+  knitr::kable(caption = "Variance Inflation Factor (VIF) Values for Independent Variables", 
+               format = "latex")  # Use latex for PDF output
+
+
+```
+
+```{r}
+# Crosstab for Trust in Vote Count 2020 Election by Perception of Misinfo on FB
+# Revised cross-tab for Trust in Vote by Perception of Misinformation
+datasummary_crosstab(
+  `Perception of Misinfo on FB` ~ `Trust Vote 2020`,
+  data = df %>%
+    mutate(
+      `Trust Vote 2020` = ifelse(trust_vote == 1, "High Trust", "Low Trust"),
+      `Perception of Misinfo on FB` = factor(perception_misinfo,
+        levels = 1:5,
+        labels = c("Not at all serious", "Slightly serious", "Moderately serious", "Very serious", "Extremely serious"))
+    ),
+  title = "Perception of Misinformation on Facebook by Trust in 2020 Vote Count",
+  position = "H"
+)
+
+
+# Cross-tab for Exposure to Political News on FB by Trust in Vote Accuracy
+
+datasummary_crosstab(
+  `Exposure to Political News on FB` ~ `Trust Vote 2020`, 
+  data = df %>%
+    mutate(
+      `Trust Vote 2020` = ifelse(trust_vote == 1, "High Trust", "Low Trust"),
+      `Exposure to Political News on FB` = factor(pol_newsfb,
+        levels = 1:5,
+        labels = c("Never", "Sometimes", "Half the time", "Most of time", "Always"))
+    ),
+  title = "Trust in Vote Accuracy by Exposure to Political News on FB",
+  position = "H"
+)
+
+```
+
+```{r}
+#Bar graph for Trust in Vote Accuracy by Exposure to Political News on Facebook
+
+ggplot(df, aes(x = as.factor(pol_newsfb), fill = as.factor(trust_vote))) +
+  geom_bar(position = "fill") +
+  labs(title = "Trust in Vote Accuracy by Exposure to Political News on FB",
+       x = "Exposure to Political News on FB",
+       y = "Proportion of Trust in Vote Accuracy",
+       fill = "Trust in Vote Accuracy") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_x_discrete(labels = c("1" = "Never", "2" = "Rarely", "3" = "Sometimes", 
+                              "4" = "Often", "5" = "Always")) +
+  scale_fill_discrete(labels = c("0" = "Low Trust", "1" = "High Trust")) +
+  theme_minimal(base_size = 12)
+
+
+# Bar graph for Trust in Vote Accuracy by Perception of Misinformation
+ggplot(df, aes(x = as.factor(perception_misinfo), fill = as.factor(trust_vote))) +
+  geom_bar(position = "fill") +
+  labs(title = "Trust in Vote Accuracy by Perception of Misinfo on FB",
+       x = "Seriousness of Misinformation on FB",
+       y = "Proportion of Trust in Vote Accuracy",
+       fill = "Trust in Vote Accuracy") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_x_discrete(labels = c("1" = "Not at all", "2" = "Slightly", 
+                              "3" = "Moderately", "4" = "Very", 
+                              "5" = "Extremely")) +
+  scale_fill_discrete(labels = c("0" = "Low Trust", "1" = "High Trust")) +
+  theme_minimal(base_size = 12)
+
+```
+
+```{r predicted values}
+
 
 ```
